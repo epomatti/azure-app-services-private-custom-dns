@@ -124,9 +124,8 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
   target_resource_id         = azurerm_linux_web_app.main.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
 
-  log {
+  enabled_log {
     category = "AppServiceHTTPLogs"
-    enabled  = true
 
     retention_policy {
       days    = 7
@@ -134,9 +133,8 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
     }
   }
 
-  log {
+  enabled_log {
     category = "AppServiceConsoleLogs"
-    enabled  = true
 
     retention_policy {
       days    = 7
@@ -144,9 +142,8 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
     }
   }
 
-  log {
+  enabled_log {
     category = "AppServiceAppLogs"
-    enabled  = true
 
     retention_policy {
       days    = 7
@@ -154,9 +151,8 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
     }
   }
 
-  log {
+  enabled_log {
     category = "AppServiceAuditLogs"
-    enabled  = true
 
     retention_policy {
       days    = 7
@@ -164,9 +160,8 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
     }
   }
 
-  log {
+  enabled_log {
     category = "AppServiceIPSecAuditLogs"
-    enabled  = true
 
     retention_policy {
       days    = 7
@@ -174,9 +169,8 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
     }
   }
 
-  log {
+  enabled_log {
     category = "AppServicePlatformLogs"
-    enabled  = true
 
     retention_policy {
       days    = 7
