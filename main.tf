@@ -104,6 +104,43 @@ resource "azurerm_linux_web_app" "main" {
   }
 }
 
+resource "azurerm_private_dns_zone" "azurewebsites" {
+  name                = "privatelink.azurewebsites.net"
+  resource_group_name = azurerm_resource_group.main.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "azurewebsites" {
+  name                  = "azurewebsites-link"
+  resource_group_name   = azurerm_resource_group.main.name
+  private_dns_zone_name = azurerm_private_dns_zone.azurewebsites.name
+  virtual_network_id    = azurerm_virtual_network.main.id
+  registration_enabled  = true
+}
+
+
+resource "azurerm_private_endpoint" "app" {
+  name                = "pe-${var.sys}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  subnet_id           = azurerm_subnet.main.id
+
+  private_dns_zone_group {
+    name = azurerm_private_dns_zone.azurewebsites.name
+    private_dns_zone_ids = [
+      azurerm_private_dns_zone.azurewebsites.id
+    ]
+  }
+
+  private_service_connection {
+    name                           = "azurewebsites"
+    private_connection_resource_id = azurerm_linux_web_app.main.id
+    is_manual_connection           = false
+    subresource_names              = ["sites"]
+  }
+
+}
+
+
 resource "azurerm_monitor_diagnostic_setting" "plan" {
   name                       = "Plan Diagnostics"
   target_resource_id         = azurerm_service_plan.main.id
