@@ -251,9 +251,9 @@ resource "azurerm_virtual_machine" "main" {
 
   storage_image_reference {
     publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "22.04-LTS"
-    version   = "latest"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
+    version   = "22.04.202302280"
   }
   storage_os_disk {
     name              = "myosdisk1"
@@ -265,6 +265,7 @@ resource "azurerm_virtual_machine" "main" {
     computer_name  = "privatedns"
     admin_username = var.dns_vm_username
     admin_password = var.dns_vm_password
+    custom_data    = filebase64("${path.module}/init.sh")
   }
   os_profile_linux_config {
     disable_password_authentication = false
