@@ -25,6 +25,6 @@ variable "dns_vm_username" {
 
 variable "dns_vm_password" {
   type      = string
-  default   = "dnspass"
+  default   = "P@ssw0rd.123"
   sensitive = true
 }
