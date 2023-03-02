@@ -21,11 +21,11 @@ resource "azurerm_resource_group" "main" {
   location = var.location
 }
 
-# resource "azurerm_network_security_group" "example" {
-#   name                = "example-security-group"
-#   location            = azurerm_resource_group.example.location
-#   resource_group_name = azurerm_resource_group.example.name
-# }
+resource "azurerm_network_security_group" "main" {
+  name                = "nsg-${var.sys}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+}
 
 resource "azurerm_virtual_network" "main" {
   name                = "vnet-${var.sys}"
@@ -228,6 +228,13 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
 
 ### DNS ###
 
+resource "azurerm_public_ip" "main" {
+  name                = "pip-dns-${var.sys}"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  allocation_method   = "Static"
+}
+
 resource "azurerm_network_interface" "main" {
   name                = "nic-dns-${var.sys}"
   location            = azurerm_resource_group.main.location
@@ -237,6 +244,11 @@ resource "azurerm_network_interface" "main" {
     name                          = "dns"
     subnet_id                     = azurerm_subnet.main.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.main.id
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
