@@ -1,5 +1,8 @@
 # azure-app-services-private
 
+```
+ssh dnsadmin@<IP>
+```
 
 ## Hybrid Network - Azure <> Onprem/Other
 

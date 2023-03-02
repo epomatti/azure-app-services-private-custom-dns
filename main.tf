@@ -27,6 +27,20 @@ resource "azurerm_network_security_group" "main" {
   resource_group_name = azurerm_resource_group.main.name
 }
 
+resource "azurerm_network_security_rule" "internet" {
+  name                        = "rule-internet"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.main.name
+  network_security_group_name = azurerm_network_security_group.main.name
+}
+
 resource "azurerm_virtual_network" "main" {
   name                = "vnet-${var.sys}"
   address_space       = ["10.0.0.0/16"]
@@ -49,6 +63,11 @@ resource "azurerm_subnet" "main" {
   #     name = "Microsoft.Web/serverFarms"
   #   }
   # }
+}
+
+resource "azurerm_subnet_network_security_group_association" "main" {
+  subnet_id                 = azurerm_subnet.main.id
+  network_security_group_id = azurerm_network_security_group.main.id
 }
 
 resource "azurerm_log_analytics_workspace" "main" {
