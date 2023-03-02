@@ -1,7 +1,19 @@
 # azure-app-services-private
 
+The VM will be created with cloud-init and upgrade the kernel. Good idea to reboot:
+
+```
+az vm restart -g rg-myprivateapp -n vm-dns-myprivateapp
+```
+
 ```
 ssh dnsadmin@<IP>
+```
+
+Bind 9 should be already installed by the `.
+
+```
+sudo vim /etc/default/bind9
 ```
 
 ## Hybrid Network - Azure <> Onprem/Other
