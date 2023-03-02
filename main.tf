@@ -225,3 +225,48 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
     }
   }
 }
+
+### DNS ###
+
+resource "azurerm_network_interface" "main" {
+  name                = "nic-dns-${var.sys}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  ip_configuration {
+    name                          = "dns"
+    subnet_id                     = azurerm_subnet.main.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+resource "azurerm_virtual_machine" "main" {
+  name                             = "vm-dns-${var.sys}"
+  location                         = azurerm_resource_group.main.location
+  resource_group_name              = azurerm_resource_group.main.name
+  network_interface_ids            = [azurerm_network_interface.main.id]
+  vm_size                          = var.dns_vm_size
+  delete_os_disk_on_termination    = true
+  delete_data_disks_on_termination = true
+
+  storage_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "22.04-LTS"
+    version   = "latest"
+  }
+  storage_os_disk {
+    name              = "myosdisk1"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+  os_profile {
+    computer_name  = "privatedns"
+    admin_username = var.dns_vm_username
+    admin_password = var.dns_vm_password
+  }
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
+}
