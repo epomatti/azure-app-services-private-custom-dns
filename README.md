@@ -1,4 +1,10 @@
-# azure-app-services-private
+# Azure App Service private with custom DNS
+
+Demonstration of how to connect to a private App Service (via Private Link) with a Bind 9 private DNS throught a VPN channel.
+
+## 1 - Create the infrastructure
+
+Create the Azure resources:
 
 > This script will read your `~/.ssh/id_rsa.pub` to grant access to the VM.
 
@@ -7,49 +13,96 @@ terraform init
 terraform apply -auto-approve
 ```
 
-Allow some moments to cloud-init to run the `init.sh` commands. After that, it's a good idea to reboot the VM:
-
-```
-az vm restart -g rg-myprivateapp -n vm-dns-myprivateapp
-```
-
-Copy the output command and log into the virtual machine:
+Copy the TF output command and log into the virtual machine:
 
 ```
 ssh dnsadmin@<IP>
 ```
 
-```
-sudo systemctl status named
-```
+In a production environment this DNS server would have a public IP, but for the purposes of this demo I'll do that.
 
-To debug any issues with cloud-init:`/var/log/cloud-init-output.log`
-
-Enabled start Bind 9:
-
-```
-sudo systemctl enable named
-sudo systemctl start named
-```
+Allow some moments to cloud-init to run the `init.sh` commands and prepare the installation of the Bind 9. To debug any issues with cloud-init look into `/var/log/cloud-init-output.log`.
 
 ```
 sudo systemctl status named
 ```
 
-Bind 9 should be already installed by the `.
+After that, it's a good idea to reboot the VM as the kernel might have been upgraded:
 
 ```
-sudo vim /etc/default/bind9
+az vm restart -g rg-myprivateapp -n vm-dns-myprivateapp
 ```
 
+## 2 - Setup the DNS Zone
 
-sudo systemctl enable bind9
+Connect again to the VM and confirm that Bind 9 is running:
 
+```
+sudo systemctl status named
+```
+
+Configure the `/etc/bind/named.conf.options` to be somewhat like this:
+
+```
+options {
+        directory "/var/cache/bind";
+
+        // If there is a firewall between you and nameservers you want
+        // to talk to, you may need to fix the firewall to allow multiple
+        // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+        // If your ISP provided one or more IP addresses for stable
+        // nameservers, you probably want to use them as forwarders.
+        // Uncomment the following block, and insert the addresses replacing
+        // the all-0's placeholder.
+
+        forwarders {
+                // Azure DNS
+                168.63.129.16;
+        };
+
+        allow-query { any; };
+
+        //========================================================================
+        // If BIND logs error messages about the root key being expired,
+        // you will need to update your keys.  See https://www.isc.org/bind-keys
+        //========================================================================
+        dnssec-validation auto;
+
+        auth-nxdomain no;    // conform to RFC1035
+        recursion yes;
+
+        listen-on-v6 { any; };
+};
+```
+
+Add your domain zone to the `/etc/bind/named.conf.local` file:
+
+```
+zone "myzone.internal" {
+        type master;
+        file "/etc/bind/db.myzone.internal";
+        notify no;
+};
+```
+
+Copy a template for the zone configuration:
+
+```
+sudo cp /etc/bind/db.local /etc/bind/db.myzone.internal
+```
+
+Edit the `/etc/bind/db.myzone.internal` to look like this:
+
+```
+
+```
 
 sudo systemctl restart named
-sudo systemctl enable named
 
-named -g
+
+app-myprivateapp.privatelink.azurewebsites.net
+
 
 ## Hybrid Network - Azure <> Onprem/Other
 

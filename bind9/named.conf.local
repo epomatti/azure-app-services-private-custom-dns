@@ -6,8 +6,8 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
-zone "internal.myzone.com" {
+zone "myzone.internal" {
         type master;
-        file "/etc/bind/db.internal.myzone.com";
+        file "/etc/bind/db.myzone.internal";
         notify no;
 };

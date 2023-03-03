@@ -11,11 +11,7 @@ options {
         // the all-0's placeholder.
 
         forwarders {
-          168.63.129.16;
-        };
-
-        listen-on {
-          10.0.1.0/24;
+                168.63.129.16;
         };
 
         allow-query { any; };
@@ -25,6 +21,9 @@ options {
         // you will need to update your keys.  See https://www.isc.org/bind-keys
         //========================================================================
         dnssec-validation auto;
+
+        auth-nxdomain no;    // conform to RFC1035
+        recursion yes;
 
         listen-on-v6 { any; };
 };
