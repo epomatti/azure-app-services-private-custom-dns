@@ -95,13 +95,51 @@ sudo cp /etc/bind/db.local /etc/bind/db.myzone.internal
 Edit the `/etc/bind/db.myzone.internal` to look like this:
 
 ```
-
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     myzone.internal. admin.myzone.internal. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      myzone.internal.
+@       IN      A       10.0.1.4
+app     IN      CNAME   app-myprivateapp.privatelink.azurewebsites.net.
 ```
 
+Restart Bind 9:
+
+```
 sudo systemctl restart named
+```
 
+Confirm that the name resolution is working:
 
-app-myprivateapp.privatelink.azurewebsites.net
+```
+dig @10.0.1.4 app.myzone.internal
+```
+
+The App Service IP address via private endpoints should be `10.0.1.5`.
+
+Edit `/etc/resolv.conf` and add change the DNS:
+
+```
+nameserver 10.0.1.4
+options edns0 trust-ad
+search h13ax1jkxvuelh3kp1ga3orfva.bx.internal.cloudapp.net
+```
+
+> By default, Azure will recreate the file on restart and the value will be lost
+
+You should now be able call the App Service:
+
+```
+curl myapp.myzone.internal
+```
 
 
 ## Hybrid Network - Azure <> Onprem/Other

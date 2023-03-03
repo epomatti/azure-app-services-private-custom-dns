@@ -23,8 +23,8 @@ variable "vm_admin_user" {
   default = "adminuser"
 }
 
-# variable "dns_vm_password" {
-#   type      = string
-#   default   = "P@ssw0rd.123"
-#   sensitive = true
-# }
+variable "vm_admin_password" {
+  type      = string
+  default   = "P@ssw0rd.123"
+  sensitive = true
+}

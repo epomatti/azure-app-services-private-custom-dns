@@ -277,6 +277,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   location              = azurerm_resource_group.main.location
   size                  = var.vm_size
   admin_username        = var.vm_admin_user
+  admin_password        = var.vm_admin_password
   network_interface_ids = [azurerm_network_interface.main.id]
 
   custom_data = filebase64("${path.module}/init.sh")

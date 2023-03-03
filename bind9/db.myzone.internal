@@ -11,4 +11,4 @@ $TTL    604800
 ;
 @       IN      NS      myzone.internal.
 @       IN      A       10.0.1.4
-app     IN      A       10.0.1.5
+app     IN      CNAME   app-myprivateapp.privatelink.azurewebsites.net.
