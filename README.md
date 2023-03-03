@@ -1,5 +1,12 @@
 # azure-app-services-private
 
+> This script will read your `~/.ssh/id_rsa.pub` to grant access to the VM.
+
+```sh
+terraform init
+terraform apply -auto-approve
+```
+
 The VM will be created with cloud-init and upgrade the kernel. Good idea to reboot:
 
 ```

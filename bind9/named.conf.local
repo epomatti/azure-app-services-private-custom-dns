@@ -6,8 +6,8 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
-zone "private.azure" {
+zone "internal.myzone.com" {
         type master;
-        file "/etc/bind/db.private.azure";
+        file "/etc/bind/db.internal.myzone.com";
         notify no;
 };

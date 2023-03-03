@@ -13,18 +13,18 @@ variable "sku_name" {
   default = "B2"
 }
 
-variable "dns_vm_size" {
+variable "vm_size" {
   type    = string
   default = "Standard_DS1_v2"
 }
 
-variable "dns_vm_username" {
+variable "vm_admin_user" {
   type    = string
-  default = "dnsadmin"
+  default = "adminuser"
 }
 
-variable "dns_vm_password" {
-  type      = string
-  default   = "P@ssw0rd.123"
-  sensitive = true
-}
+# variable "dns_vm_password" {
+#   type      = string
+#   default   = "P@ssw0rd.123"
+#   sensitive = true
+# }

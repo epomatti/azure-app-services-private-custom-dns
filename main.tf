@@ -271,34 +271,30 @@ resource "azurerm_network_interface" "main" {
   }
 }
 
-resource "azurerm_virtual_machine" "main" {
-  name                             = "vm-dns-${var.sys}"
-  location                         = azurerm_resource_group.main.location
-  resource_group_name              = azurerm_resource_group.main.name
-  network_interface_ids            = [azurerm_network_interface.main.id]
-  vm_size                          = var.dns_vm_size
-  delete_os_disk_on_termination    = true
-  delete_data_disks_on_termination = true
+resource "azurerm_linux_virtual_machine" "main" {
+  name                  = "vm-dns-${var.sys}"
+  resource_group_name   = azurerm_resource_group.main.name
+  location              = azurerm_resource_group.main.location
+  size                  = var.vm_size
+  admin_username        = var.vm_admin_user
+  network_interface_ids = [azurerm_network_interface.main.id]
 
-  storage_image_reference {
+  custom_data = filebase64("${path.module}/init.sh")
+
+  admin_ssh_key {
+    username   = var.vm_admin_user
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts-gen2"
     version   = "22.04.202302280"
-  }
-  storage_os_disk {
-    name              = "myosdisk1"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-  os_profile {
-    computer_name  = "privatedns"
-    admin_username = var.dns_vm_username
-    admin_password = var.dns_vm_password
-    custom_data    = filebase64("${path.module}/init.sh")
-  }
-  os_profile_linux_config {
-    disable_password_authentication = false
   }
 }
