@@ -16,10 +16,14 @@ provider "azurerm" {
   }
 }
 
+### Group ###
+
 resource "azurerm_resource_group" "main" {
   name     = "rg-${var.sys}"
   location = var.location
 }
+
+### Network ###
 
 resource "azurerm_network_security_group" "main" {
   name                = "nsg-${var.sys}"
@@ -70,6 +74,8 @@ resource "azurerm_subnet_network_security_group_association" "main" {
   network_security_group_id = azurerm_network_security_group.main.id
 }
 
+### Web App ###
+
 resource "azurerm_log_analytics_workspace" "main" {
   name                = "log-${var.sys}"
   location            = azurerm_resource_group.main.location
@@ -118,6 +124,8 @@ resource "azurerm_linux_web_app" "main" {
   }
 }
 
+### App Service Private Endpoint ###
+
 resource "azurerm_private_dns_zone" "azurewebsites" {
   name                = "privatelink.azurewebsites.net"
   resource_group_name = azurerm_resource_group.main.name
@@ -154,6 +162,7 @@ resource "azurerm_private_endpoint" "app" {
 
 }
 
+### App Server diagnostics ###
 
 resource "azurerm_monitor_diagnostic_setting" "plan" {
   name                       = "Plan Diagnostics"
@@ -240,7 +249,25 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
   }
 }
 
-### DNS ###
+### Private Load Balancer ###
+
+resource "azurerm_lb" "main" {
+  name                = "lb-${var.sys}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  sku                 = var.lb_sku
+  sku_tier            = var.lb_sku_tier
+
+  frontend_ip_configuration {
+    name                          = "PrivateIPAddress"
+    private_ip_address            = var.lb_private_ip
+    subnet_id                     = azurerm_subnet.main.id
+    private_ip_address_allocation = "Static"
+    private_ip_address_version    = "IPv4"
+  }
+}
+
+### Virtual Machine for DNS ###
 
 resource "azurerm_public_ip" "main" {
   name                = "pip-dns-${var.sys}"

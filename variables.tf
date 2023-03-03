@@ -28,3 +28,19 @@ variable "vm_admin_user" {
 #   default   = "P@ssw0rd.123"
 #   sensitive = true
 # }
+
+variable "lb_sku" {
+  type    = string
+  default = "Standard"
+}
+
+variable "lb_sku_tier" {
+  type    = string
+  default = "Regional"
+}
+
+variable "lb_private_ip" {
+  type    = string
+  default = "10.0.1.90"
+}
+
