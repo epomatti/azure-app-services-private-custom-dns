@@ -7,14 +7,33 @@ terraform init
 terraform apply -auto-approve
 ```
 
-The VM will be created with cloud-init and upgrade the kernel. Good idea to reboot:
+Allow some moments to cloud-init to run the `init.sh` commands. After that, it's a good idea to reboot the VM:
 
 ```
 az vm restart -g rg-myprivateapp -n vm-dns-myprivateapp
 ```
 
+Copy the output command and log into the virtual machine:
+
 ```
 ssh dnsadmin@<IP>
+```
+
+```
+sudo systemctl status named
+```
+
+To debug any issues with cloud-init:`/var/log/cloud-init-output.log`
+
+Enabled start Bind 9:
+
+```
+sudo systemctl enable named
+sudo systemctl start named
+```
+
+```
+sudo systemctl status named
 ```
 
 Bind 9 should be already installed by the `.
