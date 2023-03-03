@@ -69,10 +69,22 @@ resource "azurerm_subnet" "main" {
   # }
 }
 
+resource "azurerm_subnet" "app_gateway" {
+  name                 = "GatewaySubnet"
+  resource_group_name  = azurerm_resource_group.main.name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.0.90.0/24"]
+}
+
 resource "azurerm_subnet_network_security_group_association" "main" {
   subnet_id                 = azurerm_subnet.main.id
   network_security_group_id = azurerm_network_security_group.main.id
 }
+
+# resource "azurerm_subnet_network_security_group_association" "app_gateway" {
+#   subnet_id                 = azurerm_subnet.app_gateway.id
+#   network_security_group_id = azurerm_network_security_group.main.id
+# }
 
 ### Web App ###
 
@@ -249,22 +261,96 @@ resource "azurerm_monitor_diagnostic_setting" "app" {
   }
 }
 
-### Private Load Balancer ###
+### Application Gateway ###
 
-resource "azurerm_lb" "main" {
-  name                = "lb-${var.sys}"
-  location            = azurerm_resource_group.main.location
+resource "azurerm_application_gateway" "main" {
+  name                = "agw-${var.sys}"
   resource_group_name = azurerm_resource_group.main.name
-  sku                 = var.lb_sku
-  sku_tier            = var.lb_sku_tier
+  location            = azurerm_resource_group.main.location
+
+  sku {
+    name     = "Standard_Medium"
+    tier     = "Standard"
+    capacity = 1
+  }
+
+  gateway_ip_configuration {
+    name      = "my-gateway-ip-configuration"
+    subnet_id = azurerm_subnet.app_gateway.id
+  }
+
+  frontend_port {
+    name = "http-port"
+    port = 80
+  }
+
+  # frontend_port {
+  #   name = "https-port"
+  #   port = 443
+  # }
 
   frontend_ip_configuration {
-    name                          = "PrivateIPAddress"
-    private_ip_address            = var.lb_private_ip
-    subnet_id                     = azurerm_subnet.main.id
-    private_ip_address_allocation = "Static"
-    private_ip_address_version    = "IPv4"
+    name      = "private-frontend"
+    subnet_id = azurerm_subnet.app_gateway.id
   }
+
+  backend_address_pool {
+    name  = "address-pool"
+    fqdns = [azurerm_linux_web_app.main.default_hostname]
+  }
+
+  backend_http_settings {
+    name                  = "https-settings"
+    cookie_based_affinity = "Disabled"
+    port                  = 443
+    protocol              = "Https"
+    request_timeout       = 60
+    probe_name            = "app-service-probe"
+  }
+
+  probe {
+    name                = "app-service-probe"
+    protocol            = "Https"
+    host                = azurerm_linux_web_app.main.default_hostname
+    path                = "/"
+    interval            = 30
+    timeout             = 30
+    unhealthy_threshold = 3
+
+    pick_host_name_from_backend_http_settings = true
+  }
+
+  http_listener {
+    name                           = "http-listener"
+    frontend_ip_configuration_name = "private-frontend"
+    frontend_port_name             = "http-port"
+    protocol                       = "Http"
+  }
+
+  # http_listener {
+  #   name                           = "https-listener"
+  #   frontend_ip_configuration_name = "private-frontend"
+  #   frontend_port_name             = "https-port"
+  #   protocol                       = "Https"
+  # }
+
+  request_routing_rule {
+    name                       = "http-route"
+    rule_type                  = "Basic"
+    http_listener_name         = "http-listener"
+    backend_address_pool_name  = "address-pool"
+    backend_http_settings_name = "https-settings"
+  }
+
+  # request_routing_rule {
+  #   name                       = "https-route"
+  #   rule_type                  = "Basic"
+  #   http_listener_name         = "https-listener"
+  #   backend_address_pool_name  = "address-pool"
+  #   backend_http_settings_name = "https-settings"
+  #   priority                   = 100
+  # }
+
 }
 
 ### Virtual Machine for DNS ###

@@ -23,24 +23,13 @@ variable "vm_admin_user" {
   default = "adminuser"
 }
 
+variable "app_gateway_private_ip" {
+  type    = string
+  default = "10.0.90.100"
+}
+
 # variable "vm_admin_password" {
 #   type      = string
 #   default   = "P@ssw0rd.123"
 #   sensitive = true
 # }
-
-variable "lb_sku" {
-  type    = string
-  default = "Standard"
-}
-
-variable "lb_sku_tier" {
-  type    = string
-  default = "Regional"
-}
-
-variable "lb_private_ip" {
-  type    = string
-  default = "10.0.1.90"
-}
-
