@@ -305,13 +305,15 @@ resource "azurerm_application_gateway" "main" {
     port                  = 443
     protocol              = "Https"
     request_timeout       = 60
-    probe_name            = "app-service-probe"
+
+    pick_host_name_from_backend_address = true
+
+    probe_name = "app-service-probe"
   }
 
   probe {
     name                = "app-service-probe"
     protocol            = "Https"
-    host                = azurerm_linux_web_app.main.default_hostname
     path                = "/"
     interval            = 30
     timeout             = 30
