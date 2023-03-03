@@ -10,7 +10,7 @@ variable "sys" {
 
 variable "sku_name" {
   type    = string
-  default = "B2"
+  default = "B1"
 }
 
 variable "vm_size" {
@@ -23,8 +23,8 @@ variable "vm_admin_user" {
   default = "adminuser"
 }
 
-variable "vm_admin_password" {
-  type      = string
-  default   = "P@ssw0rd.123"
-  sensitive = true
-}
+# variable "vm_admin_password" {
+#   type      = string
+#   default   = "P@ssw0rd.123"
+#   sensitive = true
+# }

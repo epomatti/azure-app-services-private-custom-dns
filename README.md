@@ -27,6 +27,13 @@ Allow some moments to cloud-init to run the `init.sh` commands and prepare the i
 sudo systemctl status named
 ```
 
+Also confirm that the App Service Private Endpoint is working:
+
+```
+dig +short app-myprivateapp.azurewebsites.net
+curl https://app-myprivateapp.azurewebsites.net
+```
+
 After that, it's a good idea to reboot the VM as the kernel might have been upgraded:
 
 ```
@@ -108,7 +115,7 @@ $TTL    604800
 ;
 @       IN      NS      myzone.internal.
 @       IN      A       10.0.1.4
-app     IN      CNAME   app-myprivateapp.privatelink.azurewebsites.net.
+app     IN      CNAME   app-myprivateapp.azurewebsites.net.
 ```
 
 Restart Bind 9:
@@ -125,12 +132,10 @@ dig @10.0.1.4 app.myzone.internal
 
 The App Service IP address via private endpoints should be `10.0.1.5`.
 
-Edit `/etc/resolv.conf` and add change the DNS:
+Edit `/etc/resolv.conf` and change the DNS:
 
 ```
 nameserver 10.0.1.4
-options edns0 trust-ad
-search h13ax1jkxvuelh3kp1ga3orfva.bx.internal.cloudapp.net
 ```
 
 > By default, Azure will recreate the file on restart and the value will be lost
@@ -138,9 +143,8 @@ search h13ax1jkxvuelh3kp1ga3orfva.bx.internal.cloudapp.net
 You should now be able call the App Service:
 
 ```
-curl myapp.myzone.internal
+curl https://app.myzone.internal
 ```
-
 
 ## Hybrid Network - Azure <> Onprem/Other
 
@@ -167,3 +171,17 @@ Also important to notice:
 https://serverspace.io/support/help/configure-bind9-dns-server-on-ubuntu/
 https://www.debuntu.org/how-to-setting-up-a-dns-zone-with-bind9/
 https://www.richinfante.com/2020/02/21/bind9-on-my-lan
+
+
+https://learn.microsoft.com/en-us/azure/app-service/overview-vnet-integration#private-endpoints
+
+
+https://github.com/MicrosoftDocs/azure-docs/issues/36828
+
+https://stackoverflow.com/questions/69422594/azure-url-app-service-not-working-in-vnet-with-private-endpoint
+
+https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns
+
+https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain?tabs=root%2Cazurecli
+
+WEBSITE_DNS_SERVER=168.63.129.1

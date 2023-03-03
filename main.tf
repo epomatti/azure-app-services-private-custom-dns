@@ -92,12 +92,6 @@ resource "azurerm_service_plan" "main" {
   location            = azurerm_resource_group.main.location
   os_type             = "Linux"
   sku_name            = var.sku_name
-
-  lifecycle {
-    ignore_changes = [
-      sku_name, worker_count
-    ]
-  }
 }
 
 resource "azurerm_linux_web_app" "main" {
@@ -105,6 +99,7 @@ resource "azurerm_linux_web_app" "main" {
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_service_plan.main.location
   service_plan_id     = azurerm_service_plan.main.id
+  https_only          = true
 
   site_config {
     always_on = true
@@ -272,12 +267,12 @@ resource "azurerm_network_interface" "main" {
 }
 
 resource "azurerm_linux_virtual_machine" "main" {
-  name                  = "vm-dns-${var.sys}"
-  resource_group_name   = azurerm_resource_group.main.name
-  location              = azurerm_resource_group.main.location
-  size                  = var.vm_size
-  admin_username        = var.vm_admin_user
-  admin_password        = var.vm_admin_password
+  name                = "vm-dns-${var.sys}"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  size                = var.vm_size
+  admin_username      = var.vm_admin_user
+  # admin_password        = var.vm_admin_password
   network_interface_ids = [azurerm_network_interface.main.id]
 
   custom_data = filebase64("${path.module}/init.sh")
