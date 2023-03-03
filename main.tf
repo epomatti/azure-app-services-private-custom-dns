@@ -355,6 +355,50 @@ resource "azurerm_application_gateway" "main" {
 
 }
 
+
+resource "azurerm_monitor_diagnostic_setting" "application_gateway" {
+  name                       = "App Gateway Diagnostics"
+  target_resource_id         = azurerm_application_gateway.main.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
+
+  enabled_log {
+    category = "ApplicationGatewayAccessLog"
+
+    retention_policy {
+      days    = 7
+      enabled = true
+    }
+  }
+
+  enabled_log {
+    category = "ApplicationGatewayPerformanceLog"
+
+    retention_policy {
+      days    = 7
+      enabled = true
+    }
+  }
+
+  enabled_log {
+    category = "ApplicationGatewayFirewallLog"
+
+    retention_policy {
+      days    = 7
+      enabled = true
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+
+    retention_policy {
+      days    = 7
+      enabled = true
+    }
+  }
+}
+
 ### Virtual Machine for DNS ###
 
 resource "azurerm_public_ip" "main" {
