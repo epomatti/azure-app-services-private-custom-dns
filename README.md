@@ -21,7 +21,7 @@ Copy the TF output command and log into the virtual machine:
 ssh dnsadmin@<IP>
 ```
 
-In a production environment this DNS server would have a public IP, but for the purposes of this demo I'll do that.
+In a production environment this DNS server wouldn't have a public IP, but for the purposes of this demo I'll do that.
 
 Allow some moments to cloud-init to run the `init.sh` commands and prepare the installation of the Bind 9. To debug any issues with cloud-init look into `/var/log/cloud-init-output.log`.
 
