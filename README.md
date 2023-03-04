@@ -162,17 +162,15 @@ I have one example for this in this repo: https://github.com/epomatti/azure-vpn-
 ```sh
 # Create the key
 openssl genrsa -des3 -out gateway.key 2048
-#openssl ecparam -out gateway.key -name prime256v1 -genkey
 
 # Generate the CSR
 # CN should be gateway.myzone.internal
 openssl req -key gateway.key -new -out gateway.csr
-#openssl req -new -sha256 -key gateway.key -out gateway.csr
 
 # Create the Root Certificate
 openssl x509 -signkey gateway.key -in gateway.csr -req -days 365 -out gateway.crt
-#openssl x509 -req -sha256 -days 365 -in gateway.csr -signkey gateway.key -out gateway.crt
 
+# Export as PKCS12
 openssl pkcs12 -inkey gateway.key -in gateway.crt -export -out gateway.pfx
 ```
 
