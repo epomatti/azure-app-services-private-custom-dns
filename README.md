@@ -23,7 +23,7 @@ ssh dnsadmin@<IP>
 
 In a production environment this DNS server wouldn't have a public IP, but for the purposes of this demo I'll do that.
 
-Allow some moments to cloud-init to run the `init.sh` commands and prepare the installation of the Bind 9. To debug any issues with cloud-init look into `/var/log/cloud-init-output.log`.
+Allow a moment for cloud-init to run the `init.sh` commands and prepare the installation of the Bind 9. To debug any issues with cloud-init look into `/var/log/cloud-init-output.log`.
 
 ```
 sudo systemctl status named
