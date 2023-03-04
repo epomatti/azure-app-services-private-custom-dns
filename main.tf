@@ -68,22 +68,10 @@ resource "azurerm_subnet" "main" {
   # }
 }
 
-resource "azurerm_subnet" "app_gateway" {
-  name                 = "GatewaySubnet"
-  resource_group_name  = azurerm_resource_group.main.name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.0.90.0/24"]
-}
-
 resource "azurerm_subnet_network_security_group_association" "main" {
   subnet_id                 = azurerm_subnet.main.id
   network_security_group_id = azurerm_network_security_group.main.id
 }
-
-# resource "azurerm_subnet_network_security_group_association" "app_gateway" {
-#   subnet_id                 = azurerm_subnet.app_gateway.id
-#   network_security_group_id = azurerm_network_security_group.main.id
-# }
 
 ### Web App ###
 
@@ -436,12 +424,12 @@ resource "azurerm_network_interface" "main" {
 }
 
 resource "azurerm_linux_virtual_machine" "main" {
-  name                = "vm-dns-${var.sys}"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  size                = var.vm_size
-  admin_username      = var.vm_admin_user
-  # admin_password        = var.vm_admin_password
+  name                  = "vm-dns-${var.sys}"
+  resource_group_name   = azurerm_resource_group.main.name
+  location              = azurerm_resource_group.main.location
+  size                  = var.vm_size
+  admin_username        = var.vm_admin_user
+  admin_password        = var.vm_admin_password
   network_interface_ids = [azurerm_network_interface.main.id]
 
   custom_data = filebase64("${path.module}/init.sh")
@@ -463,19 +451,3 @@ resource "azurerm_linux_virtual_machine" "main" {
     version   = "22.04.202302280"
   }
 }
-
-### VPN ###
-
-# resource "azurerm_virtual_wan" "main" {
-#   name                = "wan-${var.sys}"
-#   resource_group_name = azurerm_resource_group.main.name
-#   location            = azurerm_resource_group.main.location
-# }
-
-# resource "azurerm_virtual_hub" "example" {
-#   name                = "example-virtualhub"
-#   resource_group_name = azurerm_resource_group.example.name
-#   location            = azurerm_resource_group.example.location
-#   virtual_wan_id      = azurerm_virtual_wan.example.id
-#   address_prefix      = "10.0.0.0/23"
-# }

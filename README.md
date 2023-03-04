@@ -171,9 +171,7 @@ openssl pkcs12 -inkey gateway.key -in gateway.crt -export -out gateway.pfx
 ```
 
 
-## Hybrid Network - Azure <> Onprem/Other
-
-https://feedback.azure.com/d365community/idea/f50bd7e3-8526-ec11-b6e6-000d3a4f0789
+## Hybrid Network
 
 This [answer][2] in the learn forum explains the solution connect to Azure private resources in a hybrid landscape:
 
@@ -191,20 +189,20 @@ Also important to notice:
 [1]: https://anktsrkr.github.io/post/connect-privately-to-azure-paas-resources-using-azure-private-endpoint/
 [2]: https://learn.microsoft.com/en-us/answers/questions/766816/how-to-get-on-prem-dns-to-resolve-the-fqdn-of-azur
 
+## Misc
+
+Found this parameter `WEBSITE_DNS_SERVER=168.63.129.1` to add to App Service, however didn't use it so not clear of what it does. Keeping it here for reference.
+
+## Sources
+
+```
+https://feedback.azure.com/d365community/idea/f50bd7e3-8526-ec11-b6e6-000d3a4f0789
 https://serverspace.io/support/help/configure-bind9-dns-server-on-ubuntu/
 https://www.debuntu.org/how-to-setting-up-a-dns-zone-with-bind9/
 https://www.richinfante.com/2020/02/21/bind9-on-my-lan
-
-
 https://learn.microsoft.com/en-us/azure/app-service/overview-vnet-integration#private-endpoints
-
-
 https://github.com/MicrosoftDocs/azure-docs/issues/36828
-
 https://stackoverflow.com/questions/69422594/azure-url-app-service-not-working-in-vnet-with-private-endpoint
-
 https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns
-
 https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain?tabs=root%2Cazurecli
-
-WEBSITE_DNS_SERVER=168.63.129.1
+```

@@ -28,11 +28,11 @@ variable "app_gateway_private_ip" {
   default = "10.0.90.100"
 }
 
-# variable "vm_admin_password" {
-#   type      = string
-#   default   = "P@ssw0rd.123"
-#   sensitive = true
-# }
+variable "vm_admin_password" {
+  type      = string
+  default   = "P@ssw0rd.123"
+  sensitive = true
+}
 
 variable "gateway_pfx_password" {
   type      = string
