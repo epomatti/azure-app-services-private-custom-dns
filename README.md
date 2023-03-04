@@ -1,6 +1,8 @@
 # Azure App Service private with custom DNS
 
-Demonstration of how to connect to a private App Service (via Private Link) with a Bind 9 private DNS throught a VPN channel.
+Demonstration of a private App Service (via Private Link) with a Bind 9 private DNS throught a VPN channel.
+
+<img src=".docs/diagram.png" />
 
 ## 1 - Create the infrastructure
 
