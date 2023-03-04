@@ -33,3 +33,9 @@ variable "app_gateway_private_ip" {
 #   default   = "P@ssw0rd.123"
 #   sensitive = true
 # }
+
+variable "gateway_pfx_password" {
+  type      = string
+  default   = "p4ssw0rd"
+  sensitive = true
+}

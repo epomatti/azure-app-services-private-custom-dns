@@ -269,7 +269,7 @@ resource "azurerm_application_gateway" "main" {
   location            = azurerm_resource_group.main.location
 
   sku {
-    name     = "Standard_Medium"
+    name     = "Standard_Small"
     tier     = "Standard"
     capacity = 1
   }
@@ -284,10 +284,10 @@ resource "azurerm_application_gateway" "main" {
     port = 80
   }
 
-  # frontend_port {
-  #   name = "https-port"
-  #   port = 443
-  # }
+  frontend_port {
+    name = "https-port"
+    port = 443
+  }
 
   frontend_ip_configuration {
     name      = "private-frontend"
@@ -329,12 +329,23 @@ resource "azurerm_application_gateway" "main" {
     protocol                       = "Http"
   }
 
-  # http_listener {
-  #   name                           = "https-listener"
-  #   frontend_ip_configuration_name = "private-frontend"
-  #   frontend_port_name             = "https-port"
-  #   protocol                       = "Https"
-  # }
+  ssl_policy {
+    policy_name = "AppGwSslPolicy20220101S"
+  }
+
+  ssl_certificate {
+    name     = "gateway"
+    data     = filebase64("${path.module}/gateway.pfx")
+    password = var.gateway_pfx_password
+  }
+
+  http_listener {
+    name                           = "https-listener"
+    frontend_ip_configuration_name = "private-frontend"
+    frontend_port_name             = "https-port"
+    protocol                       = "Https"
+    ssl_certificate_name           = "gateway"
+  }
 
   request_routing_rule {
     name                       = "http-route"
@@ -344,14 +355,13 @@ resource "azurerm_application_gateway" "main" {
     backend_http_settings_name = "https-settings"
   }
 
-  # request_routing_rule {
-  #   name                       = "https-route"
-  #   rule_type                  = "Basic"
-  #   http_listener_name         = "https-listener"
-  #   backend_address_pool_name  = "address-pool"
-  #   backend_http_settings_name = "https-settings"
-  #   priority                   = 100
-  # }
+  request_routing_rule {
+    name                       = "https-route"
+    rule_type                  = "Basic"
+    http_listener_name         = "https-listener"
+    backend_address_pool_name  = "address-pool"
+    backend_http_settings_name = "https-settings"
+  }
 
 }
 

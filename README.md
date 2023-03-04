@@ -146,6 +146,26 @@ You should now be able call the App Service:
 curl https://app.myzone.internal
 ```
 
+## Key Generation
+
+```sh
+# Create the key
+openssl genrsa -des3 -out gateway.key 2048
+#openssl ecparam -out gateway.key -name prime256v1 -genkey
+
+# Generate the CSR
+# CN should be gateway.myzone.internal
+openssl req -key gateway.key -new -out gateway.csr
+#openssl req -new -sha256 -key gateway.key -out gateway.csr
+
+# Create the Root Certificate
+openssl x509 -signkey gateway.key -in gateway.csr -req -days 365 -out gateway.crt
+#openssl x509 -req -sha256 -days 365 -in gateway.csr -signkey gateway.key -out gateway.crt
+
+openssl pkcs12 -inkey gateway.key -in gateway.crt -export -out gateway.pfx
+```
+
+
 ## Hybrid Network - Azure <> Onprem/Other
 
 https://feedback.azure.com/d365community/idea/f50bd7e3-8526-ec11-b6e6-000d3a4f0789
