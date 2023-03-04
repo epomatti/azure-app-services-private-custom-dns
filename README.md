@@ -116,6 +116,7 @@ $TTL    604800
 @       IN      NS      myzone.internal.
 @       IN      A       10.0.1.4
 app     IN      CNAME   app-myprivateapp.azurewebsites.net.
+gateway IN      A       10.0.90.5
 ```
 
 Restart Bind 9:
@@ -128,6 +129,7 @@ Confirm that the name resolution is working:
 
 ```
 dig @10.0.1.4 app.myzone.internal
+dig @10.0.1.4 gateway.myzone.internal
 ```
 
 The App Service IP address via private endpoints should be `10.0.1.5`.
@@ -144,6 +146,7 @@ You should now be able call the App Service:
 
 ```
 curl https://app.myzone.internal
+curl --insecure https://gateway.myzone.internal
 ```
 
 ## Key Generation
