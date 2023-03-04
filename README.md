@@ -151,6 +151,12 @@ curl https://app.myzone.internal
 curl --insecure https://gateway.myzone.internal
 ```
 
+## 3 - VPN
+
+You can create now a Virtual Private Network to connect with a VPN.
+
+I have one example for this in this repo: https://github.com/epomatti/azure-vpn-gateway
+
 ## Key Generation
 
 ```sh
