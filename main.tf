@@ -50,7 +50,7 @@ resource "azurerm_virtual_network" "main" {
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  
+
 }
 
 resource "azurerm_subnet" "main" {
@@ -465,3 +465,19 @@ resource "azurerm_linux_virtual_machine" "main" {
     version   = "22.04.202302280"
   }
 }
+
+### VPN ###
+
+# resource "azurerm_virtual_wan" "main" {
+#   name                = "wan-${var.sys}"
+#   resource_group_name = azurerm_resource_group.main.name
+#   location            = azurerm_resource_group.main.location
+# }
+
+# resource "azurerm_virtual_hub" "example" {
+#   name                = "example-virtualhub"
+#   resource_group_name = azurerm_resource_group.example.name
+#   location            = azurerm_resource_group.example.location
+#   virtual_wan_id      = azurerm_virtual_wan.example.id
+#   address_prefix      = "10.0.0.0/23"
+# }
