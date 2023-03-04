@@ -50,6 +50,7 @@ resource "azurerm_virtual_network" "main" {
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
+  
 }
 
 resource "azurerm_subnet" "main" {
@@ -330,7 +331,8 @@ resource "azurerm_application_gateway" "main" {
   }
 
   ssl_policy {
-    policy_name = "AppGwSslPolicy20220101S"
+    policy_name = "AppGwSslPolicy20170401S"
+    policy_type = "Predefined"
   }
 
   ssl_certificate {
