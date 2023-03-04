@@ -1,4 +1,4 @@
-# Azure App Service private with custom DNS
+# Azure App Service + Custom DNS private network
 
 Demonstration of a private App Service (via Private Link) with a Bind 9 private DNS throught a VPN channel.
 
