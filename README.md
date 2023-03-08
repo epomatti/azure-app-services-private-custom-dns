@@ -2,6 +2,8 @@
 
 Demonstration of a private App Service (via Private Link) with a Bind 9 private DNS throught a VPN channel.
 
+> Application Gateway V2 can be configured for private IP only using [these instructions](https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address)
+
 <img src=".docs/diagram.png" />
 
 ## 1 - Create the infrastructure
