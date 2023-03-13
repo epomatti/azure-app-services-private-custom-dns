@@ -191,6 +191,22 @@ Also important to notice:
 
 > You should know that Network Security Group (NSG) rules and User Defined Routes do not apply to Private Endpoint.
 
+## App Service VNET integration & DNS
+
+From [this article](https://learn.microsoft.com/en-us/azure/app-service/overview-vnet-integration#private-endpoints):
+
+> **Private endpoints**
+>
+> If you want to make calls to private endpoints, make sure that your DNS lookups resolve to the private endpoint. You can enforce this behavior in one of the following ways:
+> 
+> - Integrate with Azure DNS private zones. When your virtual network doesn't have a custom DNS server, the integration is done automatically when the zones are linked to the virtual network.
+> - Manage the private endpoint in the DNS server used by your app. To manage the configuration, you must know the private endpoint IP address. Then point the endpoint you're trying to reach to that address by using an A record.
+> - Configure your own DNS server to forward to Azure DNS private zones.
+
+And from [this](https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain?tabs=root%2Cazurecli#prerequisites):
+
+> Your custom domains must be in a public DNS zone; private DNS zone is only supported on Internal Load Balancer (ILB) App Service Environment (ASE).
+
 
 [1]: https://anktsrkr.github.io/post/connect-privately-to-azure-paas-resources-using-azure-private-endpoint/
 [2]: https://learn.microsoft.com/en-us/answers/questions/766816/how-to-get-on-prem-dns-to-resolve-the-fqdn-of-azur
