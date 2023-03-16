@@ -211,9 +211,11 @@ And from [this](https://learn.microsoft.com/en-us/azure/app-service/app-service-
 [1]: https://anktsrkr.github.io/post/connect-privately-to-azure-paas-resources-using-azure-private-endpoint/
 [2]: https://learn.microsoft.com/en-us/answers/questions/766816/how-to-get-on-prem-dns-to-resolve-the-fqdn-of-azur
 
-## Misc
+## Outgoing DNS
 
-Found this parameter `WEBSITE_DNS_SERVER=168.63.129.1` to add to App Service, however didn't use it so not clear of what it does. Keeping it here for reference.
+It is possible to set up [`WEBSITE_DNS_SERVER`](https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings?tabs=kudu%2Cdotnet#domain-and-dns) app setting:
+
+> IP address of primary DNS server for outgoing connections (such as to a back-end service). The default DNS server for App Service is Azure DNS, whose IP address is 168.63.129.16. If your app uses VNet integration or is in an App Service environment, it inherits the DNS server configuration from the VNet by default.
 
 ## Sources
 
