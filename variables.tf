@@ -1,41 +1,68 @@
+# Project
+variable "subscription_id" {
+  type = string
+}
+
 variable "location" {
-  type    = string
-  default = "eastus"
+  type = string
 }
 
-variable "sys" {
-  type    = string
-  default = "myprivateapp"
+# App Service
+variable "app_service_sku_name" {
+  type = string
 }
 
-variable "sku_name" {
-  type    = string
-  default = "B1"
+variable "app_service_public_network_access_enabled" {
+  type = bool
 }
 
+# Virtual Machine - DNS
 variable "vm_size" {
-  type    = string
-  default = "Standard_DS1_v2"
+  type = string
 }
 
-variable "vm_admin_user" {
-  type    = string
-  default = "adminuser"
+variable "vm_public_key_path" {
+  type = string
 }
 
-variable "app_gateway_private_ip" {
-  type    = string
-  default = "10.0.90.100"
+variable "vm_admin_username" {
+  type = string
 }
 
-variable "vm_admin_password" {
+variable "vm_image_publisher" {
+  type = string
+}
+
+variable "vm_image_offer" {
+  type = string
+}
+
+variable "vm_image_sku" {
+  type = string
+}
+
+variable "vm_image_version" {
+  type = string
+}
+
+# Applicatoin Gateway
+variable "app_gateway_sku_name" {
+  type = string
+}
+
+variable "app_gateway_sku_tier" {
+  type = string
+}
+
+variable "app_gateway_sku_capacity" {
+  type = string
+}
+
+variable "app_gateway_pfx_password" {
   type      = string
-  default   = "P@ssw0rd.123"
   sensitive = true
 }
 
-variable "gateway_pfx_password" {
-  type      = string
-  default   = "p4ssw0rd"
-  sensitive = true
+variable "app_gateway_private_ip_address" {
+  type = string
 }

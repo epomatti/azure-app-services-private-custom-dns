@@ -8,9 +8,14 @@ Demonstration of a private App Service (via Private Link) with a Bind 9 private 
 
 ## 1 - Create the infrastructure
 
-Create the Azure resources:
+Set up the private key for the VMs:
 
-> This script will read your `~/.ssh/id_rsa.pub` to grant access to the VM.
+```sh
+mkdir -p .keys
+ssh-keygen -f .keys/tmp_rsa
+```
+
+Create the Azure resources:
 
 ```sh
 terraform init
