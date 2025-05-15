@@ -22,9 +22,16 @@ terraform init
 terraform apply -auto-approve
 ```
 
+Build and push the application to ACR:
+
+```sh
+cd app
+bash acrBuildPush.sh "<ACRNAME>"
+```
+
 Copy the TF output command and log into the virtual machine:
 
-```
+```sh
 ssh dnsadmin@<IP>
 ```
 
