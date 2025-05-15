@@ -14,7 +14,8 @@ resource "random_string" "affix" {
 }
 
 locals {
-  workload = "contoso${random_string.affix.result}"
+  workload          = "contoso${random_string.affix.result}"
+  my_ip_addres_cidr = "${var.my_ip_address}/32"
 }
 
 resource "azurerm_resource_group" "main" {
@@ -36,6 +37,14 @@ module "monitor" {
   workload            = local.workload
 }
 
+module "contaier_registry" {
+  source              = "./modules/container-registry"
+  workload            = local.workload
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  allowed_ip_address  = var.my_ip_address
+}
+
 module "app_service" {
   source                        = "./modules/app-service"
   resource_group_name           = azurerm_resource_group.main.name
@@ -55,6 +64,7 @@ module "private_endpoints" {
   vnet_id                     = module.virtual_network.vnet_id
   private_endpoints_subnet_id = module.virtual_network.private_endpoints_subnet_id
   app_service_id              = module.app_service.app_service_id
+  container_registry_id       = module.contaier_registry.id
 }
 
 module "application_gateway" {

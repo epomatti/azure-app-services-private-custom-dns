@@ -21,3 +21,7 @@ variable "private_endpoints_subnet_id" {
 variable "app_service_id" {
   type = string
 }
+
+variable "container_registry_id" {
+  type = string
+}

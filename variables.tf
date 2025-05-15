@@ -7,6 +7,10 @@ variable "location" {
   type = string
 }
 
+variable "my_ip_address" {
+  type = string
+}
+
 # App Service
 variable "app_service_sku_name" {
   type = string
